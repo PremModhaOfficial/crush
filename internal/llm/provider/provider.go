@@ -15,6 +15,8 @@ type EventType string
 
 const maxRetries = 3
 
+const TypeGitHubCopilot catwalk.Type = "github-copilot"
+
 const (
 	EventContentStart   EventType = "content_start"
 	EventToolUseStart   EventType = "tool_use_start"
@@ -202,6 +204,11 @@ func NewProvider(cfg config.ProviderConfig, opts ...ProviderClientOption) (Provi
 		return &baseProvider[VertexAIClient]{
 			options: clientOptions,
 			client:  newVertexAIClient(clientOptions),
+		}, nil
+	case TypeGitHubCopilot:
+		return &baseProvider[GitHubCopilotClient]{
+			options: clientOptions,
+			client:  newGitHubCopilotClient(clientOptions),
 		}, nil
 	}
 	return nil, fmt.Errorf("provider not supported: %s", cfg.Type)

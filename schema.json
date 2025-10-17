@@ -410,7 +410,8 @@
             "anthropic",
             "gemini",
             "azure",
-            "vertexai"
+            "vertexai",
+            "github-copilot"
           ],
           "description": "Provider type that determines the API format",
           "default": "openai"

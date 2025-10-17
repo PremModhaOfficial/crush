@@ -60,6 +60,47 @@ func TestYourFunction(t *testing.T) {
   - You can also use `task fmt` to run `gofumpt -w .` on the entire project,
     as long as `gofumpt` is on the `PATH`.
 
+## GitHub Copilot Configuration
+
+GitHub Copilot is now supported as a provider. Users can configure it in their `crush.json`:
+
+```json
+{
+  "providers": {
+    "github-copilot": {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "type": "github-copilot",
+      "base_url": "https://api.githubcopilot.com",
+      "models": [
+        {
+          "id": "gpt-4o",
+          "name": "GPT-4o",
+          "context_window": 128000,
+          "default_max_tokens": 4096
+        },
+        {
+          "id": "claude-opus-4",
+          "name": "Claude Opus 4",
+          "context_window": 200000,
+          "default_max_tokens": 8192
+        }
+      ]
+    }
+  }
+}
+```
+
+**Authentication:** GitHub Copilot uses OAuth device flow. When first using the provider:
+1. User is prompted with a device code and GitHub URL
+2. User authorizes the application on GitHub
+3. System exchanges OAuth token for Copilot API token
+4. Token automatically refreshes when expired (1-hour expiry)
+
+**Requirements:** 
+- Active GitHub Copilot Pro+ subscription
+- No API key needed (OAuth handled automatically)
+
 ## Committing
 
 - ALWAYS use semantic commits (`fix:`, `feat:`, `chore:`, `refactor:`, `docs:`, `sec:`, etc).

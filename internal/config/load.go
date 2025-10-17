@@ -282,15 +282,18 @@ func (c *Config) configureProviders(env env.Env, resolver VariableResolver, know
 			c.Providers.Del(id)
 			continue
 		}
-		if providerConfig.Type != catwalk.TypeOpenAI && providerConfig.Type != catwalk.TypeAnthropic && providerConfig.Type != catwalk.TypeGemini {
+		if providerConfig.Type != catwalk.TypeOpenAI && providerConfig.Type != catwalk.TypeAnthropic && providerConfig.Type != catwalk.TypeGemini && providerConfig.Type != "github-copilot" {
 			slog.Warn("Skipping custom provider because the provider type is not supported", "provider", id, "type", providerConfig.Type)
 			c.Providers.Del(id)
 			continue
 		}
 
-		apiKey, err := resolver.ResolveValue(providerConfig.APIKey)
-		if apiKey == "" || err != nil {
-			slog.Warn("Provider is missing API key, this might be OK for local providers", "provider", id)
+		// GitHub Copilot uses OAuth, so API key can be empty initially
+		if providerConfig.Type != "github-copilot" {
+			apiKey, err := resolver.ResolveValue(providerConfig.APIKey)
+			if apiKey == "" || err != nil {
+				slog.Warn("Provider is missing API key, this might be OK for local providers or OAuth-based providers", "provider", id)
+			}
 		}
 		baseURL, err := resolver.ResolveValue(providerConfig.BaseURL)
 		if baseURL == "" || err != nil {
